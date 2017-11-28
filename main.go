@@ -16,6 +16,7 @@ var (
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
 	fmt.Fprintln(color.Output, color.CyanString("--------------------------------------------------"))
 	fmt.Fprintf(color.Output, "Method: %v  Location: %v\n", color.RedString(r.Method), color.BlueString(r.RequestURI))
 	if len(r.Header) > 0 {
@@ -31,6 +32,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	io.Copy(color.Output, r.Body)
 	color.Unset()
 	fmt.Println()
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	w.Write([]byte("OK"))
 	w.WriteHeader(*responce)
 }
 
